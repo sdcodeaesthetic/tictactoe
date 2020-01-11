@@ -1,5 +1,3 @@
-#Tic Tac Toe
-
 #board
 #display board
 #play game
@@ -13,6 +11,9 @@
 #end game
 
 
+initial_board = [" ", " ", " ",
+                 " ", " ", " ",
+                 " ", " ", " "]
 board = [" ", " ", " ",
          " ", " ", " ",
          " ", " ", " "]
@@ -22,19 +23,20 @@ current_player = "X"
 
 
 def display_board():
-    print(board[0] + "|" + board[1] + "|" + board[2])
-    print("_|_|_")
-    print(board[3] + "|" + board[4] + "|" + board[5])
-    print("_|_|_")
-    print(board[6] + "|" + board[7] + "|" + board[8])
-    print(" | | ")
+    print("")
+    print(" " + board[0] + " " + "|" + " " + board[1] + " " + "|" + " " + board[2] + " ")
+    print("___|___|___")
+    print(" " + board[3] + " " + "|" + " " + board[4] + " " + "|" + " " + board[5] + " ")
+    print("___|___|___")
+    print(" " + board[6] + " " + "|" + " " + board[7] + " " + "|" + " " + board[8] + " ")
+    print("   |   |   ")
 
 
 def handle_turn(player):
     print(player + "'s Turn.")
     position = input("Choose a Position From 1-9: ")
     valid = False
-    while not valid
+    while not valid:
         while position not in ["1", "2", "3", "4", "5", "6", "7", "8", "9"]:
             print("Invalid Input.")
             position = input("Choose a Position From 1-9: ")
@@ -43,6 +45,7 @@ def handle_turn(player):
             valid = True
         else:
             print("The Position is Already Filled. Choose Wisely!")
+            position = input("Choose a Position From 1-9: ")
     board[position] = player
     display_board()
 
@@ -129,10 +132,32 @@ def flip_player():
     return
 
 
-def play_game():
-    #display initial board
-    display_board()
+def replay_game():
+    global game_still_going
+    global winner
+    global current_player
+    print("\nDo You Want To Play More?")
+    print("Press 1 To Play")
+    print("Press 2 To Quit")
+    kp = input("> ")
+    kp = int(kp)
+    while True:
+        if(kp == 1):
+            global board
+            board = initial_board
+            game_still_going = True
+            winner = None
+            current_player = "X"
+            play_game()
+        elif(kp == 2):
+            quit()
+        else:
+            print("Invalid Input")
 
+
+def play_game():
+    print("TIC TAC TOE")
+    display_board()
     while game_still_going:
         handle_turn(current_player)
         check_if_game_over()
@@ -141,5 +166,7 @@ def play_game():
         print(winner + " Won.")
     elif winner == None:
         print("There is a Tie.")
+    replay_game()
+
 
 play_game()
