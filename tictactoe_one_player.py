@@ -11,6 +11,7 @@
 #end game
 
 
+import random
 initial_board = [" ", " ", " ",
                  " ", " ", " ",
                  " ", " ", " "]
@@ -32,22 +33,34 @@ def display_board():
     print("   |   |   ")
 
 
-def handle_turn(player):
-    print(player + "'s Turn.")
-    position = input("Choose a Position From 1-9: ")
-    valid = False
-    while not valid:
-        while position not in ["1", "2", "3", "4", "5", "6", "7", "8", "9"]:
-            print("Invalid Input.")
-            position = input("Choose a Position From 1-9: ")
-        position = int(position) - 1
-        if board[position] == " ":
-            valid = True
-        else:
-            print("The Position is Already Filled. Choose Wisely!")
-            position = input("Choose a Position From 1-9: ")
-    board[position] = player
-    display_board()
+def handle_turn(player, ur_choice):
+    if(player == ur_choice):
+        print("Your Turn.")
+        position = input("Choose a Position From 1-9: ")
+        valid = False
+        while not valid:
+            while position not in ["1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+                print("Invalid Input.")
+                position = input("Choose a Position From 1-9: ")
+            position = int(position) - 1
+            if board[position] == " ":
+                valid = True
+            else:
+                print("The Position is Already Filled. Choose Wisely!")
+                position = input("Choose a Position From 1-9: ")
+        board[position] = player
+        display_board()
+    else:
+        print("Computer's Turn.")
+        items = ["0", "1", "2", "3", "4", "5", "6", "7", "8"]
+        valid = False
+        while not valid:
+            position = random.choice(items)
+            position = int(position)
+            if board[position] == " ":
+                valid = True
+        board[position] = player
+        display_board()
 
 
 def check_rows():
@@ -158,12 +171,17 @@ def replay_game():
 def play_game():
     print("TIC TAC TOE")
     display_board()
+    print("Enter Your Choice(X or O) :")
+    user_choice = input("> ")
     while game_still_going:
-        handle_turn(current_player)
+        handle_turn(current_player, user_choice)
         check_if_game_over()
         flip_player()
     if winner == "X" or winner == "O":
-        print(winner + " Won.")
+        if(winner == user_choice):
+            print("You Won.")
+        else:
+            print("Computer Won.")
     elif winner == None:
         print("There is a Tie.")
     replay_game()
