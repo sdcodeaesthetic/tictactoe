@@ -7,7 +7,6 @@ class TicTacToe():
         self.master = master
         self.game_board = [[], [], []]
         self.current_player = 'X'
-        self.answer = True
         self.player1_name = 'NULL'
         self.player2_name = 'NONE'
         self.bottom_label = ''
@@ -18,26 +17,14 @@ class TicTacToe():
         return b
 
     def click(self, row, col):
-        if self.answer:
-            pass
+        self.game_board[row][col].config(text = self.current_player, state = "disabled")
+        self.play_game()
+        if self.current_player == 'X':
+            self.current_player = 'O'
+            self.bottom_label.config(text = "{}'s Chance".format(self.player2_name))
         else:
-            self.game_board[row][col].config(text = self.current_player, state = "disabled")
-            if self.current_player == 'X':
-                self.current_player = 'O'
-                self.bottom_label.config(text = "{}'s Chance".format(self.player2_name))
-            else:
-                self.current_player = 'X'
-                self.bottom_label.config(text = "{}'s Chance".format(self.player1_name))
-            self.play_game()
-
-    def initial_gui(self):
-        self.answer = askyesno("Welcome", "Do you want to play the game as Single Player ?")
-        if self.answer == True:
-            self.player1_name = simpledialog.askstring("Player", "Please, Enter Your Name")
-            self.player2_name = 'Computer'
-        else:
-            self.player1_name = simpledialog.askstring("Player 1(X)", "Please, Enter Your Name")
-            self.player2_name = simpledialog.askstring("Player 2(O)", "Please, Enter Your Name")
+            self.current_player = 'X'
+            self.bottom_label.config(text = "{}'s Chance".format(self.player1_name))   
 
     def gui_interface(self):
         for i in range(3):
@@ -45,7 +32,8 @@ class TicTacToe():
                 self.game_board[i].append(self.game_button())
                 self.game_board[i][j].config(command = lambda row = i, col = j: self.click(row, col))
                 self.game_board[i][j].grid(row = i,column = j)
-        self.initial_gui()
+        self.player1_name = simpledialog.askstring("Player 1(X)", "Please, Enter Your Name")
+        self.player2_name = simpledialog.askstring("Player 2(O)", "Please, Enter Your Name")
         label = Label(self.master, text = "{}'s Chance".format(self.player1_name), font = ('arial', 20, 'bold'))
         label.grid(row = 3, column = 0, columnspan = 3)
         self.bottom_label = label
@@ -95,11 +83,18 @@ class TicTacToe():
             return True
 
     def reset(self):
-        self.current_player = 'X'
-        for i in range(3):
-            for j in range(3):
-                self.game_board[i][j]["text"] = ""
-                self.game_board[i][j]["state"] = "normal"       
+        answer = askyesno("The End", "Do you want to play again ?")
+        if answer:
+            self.current_player = 'O'
+            for i in range(3):
+                for j in range(3):
+                    self.game_board[i][j]["text"] = ""
+                    self.game_board[i][j]["state"] = "normal"
+            self.player1_name = simpledialog.askstring("Player 1(X)", "Please, Enter Your Name")
+            self.player2_name = simpledialog.askstring("Player 2(O)", "Please, Enter Your Name")
+            self.bottom_label.config(text = "{}'s Chance".format(self.player1_name))
+        else:
+            self.master.destroy()
 
     def play_game(self):
         if(self.check_win()):
